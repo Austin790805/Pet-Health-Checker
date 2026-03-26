@@ -1,0 +1,5 @@
+{
+  "name": "Pet Health Checker",
+  "description": "A web-based Pet Health Checker System that provides preliminary pet health assessment using TensorFlow.js, community forums, and a vet locator.",
+  "requestFramePermissions": ["geolocation"]
+}

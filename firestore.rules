@@ -1,0 +1,98 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper Functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    function isDocOwner() {
+      return isAuthenticated() && request.auth.uid == resource.data.authorId;
+    }
+    function isAdmin() {
+      return isAuthenticated() && (
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
+        (request.auth.token.email == "masiboaustin@gmail.com" && request.auth.token.email_verified == true)
+      );
+    }
+    function uidUnchanged() {
+      return !('uid' in request.resource.data) || request.resource.data.uid == request.auth.uid;
+    }
+    function authorIdUnchanged() {
+      return !('authorId' in request.resource.data) || request.resource.data.authorId == request.auth.uid;
+    }
+    function authorIdNotModified() {
+      return !('authorId' in request.resource.data) || request.resource.data.authorId == resource.data.authorId;
+    }
+
+    // Domain Validators
+    function isValidUser() {
+      let data = request.resource.data;
+      return data.keys().hasAll(['uid', 'email', 'role']) &&
+             data.uid is string && data.uid.size() > 0 && data.uid.size() < 100 &&
+             data.email is string && data.email.size() > 0 && data.email.size() < 100 &&
+             data.role in ['user', 'admin'] &&
+             (!('displayName' in data) || (data.displayName is string && data.displayName.size() < 100));
+    }
+
+    function isValidPost() {
+      let data = request.resource.data;
+      return data.keys().hasAll(['title', 'content', 'authorId', 'petType']) &&
+             data.title is string && data.title.size() > 0 && data.title.size() < 200 &&
+             data.content is string && data.content.size() > 0 && data.content.size() < 5000 &&
+             data.authorId is string && data.authorId.size() > 0 && data.authorId.size() < 100 &&
+             data.petType in ['dog', 'cat', 'other'] &&
+             (!('authorName' in data) || (data.authorName is string && data.authorName.size() < 100)) &&
+             (!('condition' in data) || (data.condition is string && data.condition.size() < 100));
+    }
+
+    function isValidComment() {
+      let data = request.resource.data;
+      return data.keys().hasAll(['content', 'authorId', 'postId']) &&
+             data.content is string && data.content.size() > 0 && data.content.size() < 2000 &&
+             data.authorId is string && data.authorId.size() > 0 && data.authorId.size() < 100 &&
+             data.postId is string && data.postId.size() > 0 && data.postId.size() < 100 &&
+             (!('authorName' in data) || (data.authorName is string && data.authorName.size() < 100));
+    }
+
+    function isValidBlog() {
+      let data = request.resource.data;
+      return data.keys().hasAll(['title', 'content', 'authorId']) &&
+             data.title is string && data.title.size() > 0 && data.title.size() < 200 &&
+             data.content is string && data.content.size() > 0 && data.content.size() < 10000 &&
+             data.authorId is string && data.authorId.size() > 0 && data.authorId.size() < 100 &&
+             (!('category' in data) || (data.category is string && data.category.size() < 100));
+    }
+
+    // Rules
+    match /users/{userId} {
+      allow read: if isAuthenticated(); // Allow reading basic profile info (denormalize if PII is added)
+      allow create: if isOwner(userId) && isValidUser() && uidUnchanged() && (request.resource.data.role == 'user' || isAdmin());
+      allow update: if isOwner(userId) && isValidUser() && uidUnchanged() && (request.resource.data.role == resource.data.role || isAdmin());
+      allow delete: if isAdmin();
+    }
+
+    match /posts/{postId} {
+      allow read: if true;
+      allow create: if isAuthenticated() && isValidPost() && authorIdUnchanged();
+      allow update: if isDocOwner() && isValidPost() && authorIdNotModified();
+      allow delete: if isDocOwner() || isAdmin();
+    }
+
+    match /comments/{commentId} {
+      allow read: if true;
+      allow create: if isAuthenticated() && isValidComment() && authorIdUnchanged();
+      allow update: if isDocOwner() && isValidComment() && authorIdNotModified();
+      allow delete: if isDocOwner() || isAdmin();
+    }
+
+    match /blogs/{blogId} {
+      allow read: if true;
+      allow create: if isAdmin() && isValidBlog() && authorIdUnchanged();
+      allow update: if isAdmin() && isValidBlog() && authorIdNotModified();
+      allow delete: if isAdmin();
+    }
+  }
+}
