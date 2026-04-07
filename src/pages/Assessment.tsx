@@ -87,6 +87,15 @@ export default function Assessment() {
     }
   };
 
+  const handleReset = () => {
+    setImageURL(null);
+    setSymptoms('');
+    setResults(null);
+    if (imageRef.current) {
+      imageRef.current.src = '';
+    }
+  };
+
   return (
     <div className="max-w-4xl mx-auto space-y-8">
       <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100">
@@ -141,13 +150,23 @@ export default function Assessment() {
               />
             </div>
 
-            <button
-              onClick={analyzeHealth}
-              disabled={!model || !imageURL || !symptoms || analyzing}
-              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
-            >
-              {analyzing ? t('analyzing') : t('analyze')}
-            </button>
+            <div className="flex gap-4">
+              <button
+                onClick={analyzeHealth}
+                disabled={!model || !imageURL || !symptoms || analyzing}
+                className="flex-1 flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+              >
+                {analyzing ? t('analyzing') : t('analyze')}
+              </button>
+              {(imageURL || symptoms || results) && (
+                <button
+                  onClick={handleReset}
+                  className="flex-1 flex justify-center py-3 px-4 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm text-sm font-medium text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
+                >
+                  Reset Assessment
+                </button>
+              )}
+            </div>
           </div>
 
           {/* Results Section */}

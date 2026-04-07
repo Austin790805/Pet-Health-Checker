@@ -4,8 +4,10 @@ import { initReactI18next } from 'react-i18next';
 const resources = {
   en: {
     translation: {
-      "app_name": "Pet Health Checker",
+      "app_name": "PawCheck",
       "home": "Home",
+      "dashboard": "Dashboard",
+      "appointments": "Appointments",
       "assessment": "Health Assessment",
       "vet_locator": "Vet Locator",
       "community": "Community",
@@ -13,7 +15,7 @@ const resources = {
       "login": "Login",
       "logout": "Logout",
       "register": "Register",
-      "welcome": "Welcome to Pet Health Checker",
+      "welcome": "Welcome to PawCheck",
       "welcome_desc": "Get preliminary health assessments for your pets using AI, connect with other owners, and find nearby vets.",
       "start_assessment": "Start Assessment",
       "pet_type": "Pet Type",
@@ -44,13 +46,24 @@ const resources = {
       "forgot_password": "Forgot Password?",
       "no_account": "Don't have an account? Register",
       "has_account": "Already have an account? Login",
-      "language": "Language"
+      "language": "Language",
+      "how_it_works": "How PawCheck Works",
+      "step_1": "1. Upload & Describe",
+      "step_1_desc": "Upload a photo of your pet and describe their symptoms.",
+      "step_2": "2. AI Analysis",
+      "step_2_desc": "Our advanced AI analyzes the inputs to identify potential conditions.",
+      "step_3": "3. Get Recommendations",
+      "step_3_desc": "Receive actionable home care advice and know when to visit a vet.",
+      "reviews": "What Pet Owners Say",
+      "book_appointment": "Book Appointment"
     }
   },
   sw: {
     translation: {
-      "app_name": "Mchunguzi wa Afya ya Wanyama",
+      "app_name": "PawCheck",
       "home": "Mwanzo",
+      "dashboard": "Dashibodi",
+      "appointments": "Miadi",
       "assessment": "Tathmini ya Afya",
       "vet_locator": "Tafuta Daktari",
       "community": "Jamii",
@@ -58,7 +71,7 @@ const resources = {
       "login": "Ingia",
       "logout": "Toka",
       "register": "Jisajili",
-      "welcome": "Karibu kwenye Mchunguzi wa Afya ya Wanyama",
+      "welcome": "Karibu kwenye PawCheck",
       "welcome_desc": "Pata tathmini ya awali ya afya ya wanyama wako kwa kutumia AI, ungana na wamiliki wengine, na utafute madaktari wa karibu.",
       "start_assessment": "Anza Tathmini",
       "pet_type": "Aina ya Mnyama",
@@ -89,7 +102,16 @@ const resources = {
       "forgot_password": "Umesahau Nenosiri?",
       "no_account": "Hauna akaunti? Jisajili",
       "has_account": "Tayari una akaunti? Ingia",
-      "language": "Lugha"
+      "language": "Lugha",
+      "how_it_works": "Jinsi PawCheck Inavyofanya Kazi",
+      "step_1": "1. Pakia na Eleza",
+      "step_1_desc": "Pakia picha ya mnyama wako na ueleze dalili zake.",
+      "step_2": "2. Uchambuzi wa AI",
+      "step_2_desc": "AI yetu inachambua taarifa ili kutambua hali zinazowezekana.",
+      "step_3": "3. Pata Mapendekezo",
+      "step_3_desc": "Pata ushauri wa huduma ya nyumbani na ujue wakati wa kumwona daktari.",
+      "reviews": "Wamiliki wa Wanyama Wanasema Nini",
+      "book_appointment": "Weka Miadi"
     }
   }
 };
